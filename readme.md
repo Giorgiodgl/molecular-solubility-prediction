@@ -1,4 +1,4 @@
-# Molecular Solubility Prediction ($\log S$) with Explainable ML
+# Molecular Solubility Prediction with Explainable ML
 
 An end-to-end cheminformatics and machine learning pipeline to predict aqueous solubility ($\text{measured log S}$) directly from SMILES strings using the ESOL (Delaney) dataset. 
 
@@ -13,20 +13,6 @@ This project implements a complete, transparent machine learning workflow that:
 1. Merges **structural Morgan fingerprints** with **explicit thermodynamic physicochemical properties**.
 2. Evaluates out-of-distribution structural generalization using **Bemis-Murcko Scaffold Splitting**.
 3. Audits feature importances with **SHAP TreeExplainer** to ensure alignment with fundamental chemical physics.
-
----
-
-## 🛠️ Pipeline Architecture
-
-```
-Molecular SMILES ---> [ RDKit Feature Extractor ] ---> Combined Feature Matrix X (2054 cols)
-                                                                 │
-                                                       (2048-bit Morgan Fingerprints +
-                                                        6 Physicochemical Descriptors)
-                                                                 │
-                                                                 ▼
-[ Model Explainability (SHAP) ] <--- [ Optimized Random Forest ] <--- [ Bemis-Murcko Scaffold Split ]
-```
 
 ### 1. Feature Engineering
 * **Morgan Fingerprints:** 2,048-bit structural bit vectors ($radius = 2$) calculated via RDKit's `rdFingerprintGenerator`.
@@ -73,47 +59,3 @@ Optimized via `RandomizedSearchCV` with 5-fold cross-validation to apply leaf-le
 1. **Molecular Weight (MW):** High MW values (red points) strongly push predictions to the **left (negative impact)**, reflecting the physical reality that larger, bulkier molecules dissolve less readily in water.
 2. **Polar Surface Area (PSA):** High PSA values (red points) push predictions to the **right (positive impact)**, as polar groups form hydrogen bonds with water molecules to increase solubility.
 3. **Descriptor Prominence:** Continuous thermodynamic properties dominate the top rankings over individual sparse bit fingerprints, confirming that physical properties provide a strong global predictive signal.
-
----
-
-## 📁 Repository Structure
-
-```text
-molecular-solubility-prediction/
-│
-├── images/
-│   └── shap_summary.png                  # Saved SHAP plot visualization
-├── notebooks/
-│   └── Molecule_Solubility_Prediction.ipynb  # End-to-end Jupyter Notebook
-├── README.md                             # Project documentation
-└── requirements.txt                      # Environment dependencies
-```
-
----
-
-## 🚀 Getting Started
-
-### 1. Installation
-Clone the repository and install required packages:
-
-```bash
-git clone https://github.com/your-username/molecular-solubility-prediction.git
-cd molecular-solubility-prediction
-pip install -r requirements.txt
-```
-
-### 2. Dependencies
-* `python >= 3.10`
-* `rdkit`
-* `pandas`
-* `numpy`
-* `scikit-learn`
-* `shap`
-* `matplotlib`
-
----
-
-## 🔮 Future Directions
-* **Gradient Boosting Benchmark:** Evaluate XGBoost, LightGBM, and CatBoost to test leaf regularization on out-of-distribution scaffolds.
-* **Graph Neural Networks (GNNs):** Implement Message Passing Neural Networks (MPNN) / AttentiveFP to learn dynamic graph representations directly from molecular structures.
-* **Transfer Learning:** Fine-tune pre-trained molecular transformers like **ChemBERTa** on the ESOL dataset for enhanced scaffold generalization.
